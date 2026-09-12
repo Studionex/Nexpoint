@@ -5,10 +5,12 @@
     <Nullable>enable</Nullable>
     <IsPackable>true</IsPackable>
     <PackageId>Nexpoint</PackageId>
-    <Version>1.0.0</Version>
+    <Version>1.0.2</Version>
     <Authors>StudioNex</Authors>
     <Description>ASP.NET Core helpers for minimal API endpoints, ErrorOr results, FluentValidation, and OpenAPI error examples.</Description>
     <PackageTags>aspnetcore;minimal-api;erroror;mediatr;fluentvalidation;openapi</PackageTags>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageOutputPath>$(MSBuildThisFileDirectory)..\artifacts\</PackageOutputPath>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
@@ -21,5 +23,8 @@
     <PackageReference Include="FluentValidation" Version="12.1.1"></PackageReference>
     <PackageReference Include="MediatR" Version="14.2.0"></PackageReference>
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.3"></PackageReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\README.md" Pack="true" PackagePath="\" />
   </ItemGroup>
 </Project>
