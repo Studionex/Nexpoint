@@ -1,0 +1,25 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <IsPackable>true</IsPackable>
+    <PackageId>Nexpoint</PackageId>
+    <Version>1.0.0</Version>
+    <Authors>StudioNex</Authors>
+    <Description>ASP.NET Core helpers for minimal API endpoints, ErrorOr results, FluentValidation, and OpenAPI error examples.</Description>
+    <PackageTags>aspnetcore;minimal-api;erroror;mediatr;fluentvalidation;openapi</PackageTags>
+    <PackageOutputPath>$(MSBuildThisFileDirectory)..\artifacts\</PackageOutputPath>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <RepositoryUrl>https://github.com/Studionex/Nexpoint</RepositoryUrl>
+    <PackageProjectUrl>https://github.com/Studionex/Nexpoint</PackageProjectUrl>
+  </PropertyGroup>
+  <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App"></FrameworkReference>
+    <PackageReference Include="ErrorOr" Version="2.1.1"></PackageReference>
+    <PackageReference Include="FluentValidation" Version="12.1.1"></PackageReference>
+    <PackageReference Include="MediatR" Version="14.2.0"></PackageReference>
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.3"></PackageReference>
+  </ItemGroup>
+</Project>
