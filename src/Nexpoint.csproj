@@ -22,9 +22,9 @@
     <PackageReference Include="ErrorOr" Version="2.1.1"></PackageReference>
     <PackageReference Include="FluentValidation" Version="12.1.1"></PackageReference>
     <PackageReference Include="MediatR" Version="14.2.0"></PackageReference>
-    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.3"></PackageReference>
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.12"></PackageReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\README.md" Pack="true" PackagePath="\" />
+    <None Include="..\README.md" Pack="true" PackagePath="\"></None>
   </ItemGroup>
 </Project>
