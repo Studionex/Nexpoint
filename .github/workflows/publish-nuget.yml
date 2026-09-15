@@ -21,6 +21,7 @@ concurrency:
 permissions:
   contents: read
   id-token: write
+  packages: write
 
 jobs:
   publish:
@@ -107,7 +108,18 @@ jobs:
             ls -la artifacts || true
             exit 1
           fi
-          echo "Pushing $package"
+          echo "Pushing $package to nuget.org"
           dotnet nuget push "$package" \
             --api-key "$NUGET_API_KEY" \
             --source https://api.nuget.org/v3/index.json
+
+      - name: Push to GitHub Packages
+        env:
+          PACKAGE_VERSION: ${{ steps.version.outputs.value }}
+        run: |
+          set -euo pipefail
+          package="artifacts/Nexpoint.${PACKAGE_VERSION}.nupkg"
+          echo "Pushing $package to GitHub Packages"
+          dotnet nuget push "$package" \
+            --api-key "${{ secrets.GITHUB_TOKEN }}" \
+            --source "https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json"
