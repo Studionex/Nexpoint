@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
     inputs:
       version:
-        description: Package version (e.g. 1.0.3). Defaults to the Version in the csproj.
+        description: Package version to publish (e.g. 1.0.3). Leave empty to use the Version in the csproj.
         required: false
         type: string
       nuget_user:
@@ -98,9 +98,16 @@ jobs:
       - name: Push to NuGet.org
         env:
           NUGET_API_KEY: ${{ steps.login.outputs.NUGET_API_KEY || secrets.NUGET_API_KEY }}
+          PACKAGE_VERSION: ${{ steps.version.outputs.value }}
         run: |
           set -euo pipefail
-          dotnet nuget push "artifacts/*.nupkg" \
+          package="artifacts/Nexpoint.${PACKAGE_VERSION}.nupkg"
+          if [ ! -f "$package" ]; then
+            echo "::error::Expected package $package was not produced."
+            ls -la artifacts || true
+            exit 1
+          fi
+          echo "Pushing $package"
+          dotnet nuget push "$package" \
             --api-key "$NUGET_API_KEY" \
-            --source https://api.nuget.org/v3/index.json \
-            --skip-duplicate
+            --source https://api.nuget.org/v3/index.json
