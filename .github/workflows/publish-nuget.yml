@@ -1,0 +1,76 @@
+name: Publish NuGet
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+    inputs:
+      version:
+        description: Package version (e.g. 1.0.3). Defaults to the Version in the csproj.
+        required: false
+        type: string
+
+concurrency:
+  group: nuget-publish
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: "10.0.x"
+
+      - name: Resolve package version
+        id: version
+        env:
+          RELEASE_TAG: ${{ github.event.release.tag_name }}
+          INPUT_VERSION: ${{ inputs.version }}
+        run: |
+          set -euo pipefail
+          version="${INPUT_VERSION:-}"
+          if [ -z "$version" ] && [ -n "${RELEASE_TAG:-}" ]; then
+            version="$RELEASE_TAG"
+          fi
+          version="${version#v}"
+          if [ -z "$version" ]; then
+            version="$(dotnet msbuild src/Nexpoint.csproj -nologo -getProperty:Version | tr -d '[:space:]')"
+          fi
+          if [ -z "$version" ]; then
+            echo "Could not determine package version." >&2
+            exit 1
+          fi
+          echo "value=$version" >> "$GITHUB_OUTPUT"
+          echo "Publishing Nexpoint $version"
+
+      - name: Pack
+        run: >
+          dotnet pack src/Nexpoint.csproj
+          --configuration Release
+          -p:PackageVersion=${{ steps.version.outputs.value }}
+          -p:RepositoryCommit=${{ github.sha }}
+
+      - name: NuGet login
+        uses: NuGet/login@v1
+        id: login
+        with:
+          user: ${{ secrets.NUGET_USER }}
+
+      - name: Push to NuGet.org
+        env:
+          NUGET_API_KEY: ${{ steps.login.outputs.NUGET_API_KEY }}
+        run: |
+          set -euo pipefail
+          dotnet nuget push "artifacts/*.nupkg" \
+            --api-key "$NUGET_API_KEY" \
+            --source https://api.nuget.org/v3/index.json \
+            --skip-duplicate
