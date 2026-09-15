@@ -111,7 +111,8 @@ jobs:
           echo "Pushing $package to nuget.org"
           dotnet nuget push "$package" \
             --api-key "$NUGET_API_KEY" \
-            --source https://api.nuget.org/v3/index.json
+            --source https://api.nuget.org/v3/index.json \
+            --skip-duplicate
 
       - name: Push to GitHub Packages
         env:
@@ -122,4 +123,5 @@ jobs:
           echo "Pushing $package to GitHub Packages"
           dotnet nuget push "$package" \
             --api-key "${{ secrets.GITHUB_TOKEN }}" \
-            --source "https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json"
+            --source "https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json" \
+            --skip-duplicate
