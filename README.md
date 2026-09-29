@@ -40,7 +40,7 @@ public class FakeEndpoint : NexEndpoint
 }
 ```
 
-Return `NexResult.Ok`, `NexResult.Created`, or `NexResult.NoContent`. From `ErrorOr<T>`, use `NexOk`, `NexCreated`, or `NexNoContent`.
+Return `NexResult.Ok`, `NexResult.Created`, or `NexResult.NoContent`. From `ErrorOr<T>`, use `Ok`, `Created`, or `NoContent`.
 
 ## License
 
