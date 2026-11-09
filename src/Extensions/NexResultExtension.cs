@@ -59,38 +59,22 @@ public static class NexResultExtension
 
     private static RouteHandlerBuilder ApplyCredentialsDescription(NexEndpoint endpoint, RouteHandlerBuilder builder)
     {
+        var sections = new List<string>();
+
+        if (!string.IsNullOrWhiteSpace(endpoint.Description))
+            sections.Add(endpoint.Description.Trim());
+
         if (endpoint.RequiredPermissions is { Length: > 0 })
-        {
-            var lines = endpoint.RequiredPermissions
-                .Select(p => $"- {p}");
+            sections.Add("Required permissions:\n" +
+                string.Join("\n", endpoint.RequiredPermissions.Select(p => $"- {p}")));
 
-            var description =
-                endpoint.Description != null
-                    ? $"{endpoint.Description}\n\n"
-                    : string.Empty
-                    ;
-            description += "Required permissions:\n" +
-
-        string.Join("\n", lines);
-            builder = builder.WithDescription(description);
-        }
         if (endpoint.RequiredRoles is { Length: > 0 })
-        {
-            var lines = endpoint.RequiredRoles
-                .Select(p => $"- {p}");
+            sections.Add("Required roles:\n" +
+                string.Join("\n", endpoint.RequiredRoles.Select(p => $"- {p}")));
 
-            var description =
-                endpoint.Description != null
-                    ? $"{endpoint.Description}\n\n"
-                    : string.Empty
-                    ;
-            description += "Required roles:\n" +
-
-        string.Join("\n", lines);
-            builder = builder.WithDescription(description);
-        }
-
-        return builder;
+        return sections.Count == 0
+            ? builder
+            : builder.WithDescription(string.Join("\n\n", sections));
     }
 
     private static string GetTagFromRoute(string route)
